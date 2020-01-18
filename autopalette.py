@@ -83,6 +83,21 @@ class Autopalette:
         )
 
         return np.reshape(res.x, (-1, 3))
+    
+    # Basin-hopping optimizer
+    def bh_optimize_palette(self, niter = 100, T = 1, stepsize = 0.5):
+        
+        res = optimize.basinhopping(
+            func = self.objective,
+            x0 = self.new_colors,
+            niter = niter,
+            T = T,
+            stepsize = stepsize,
+            minimizer_kwargs = {'method' : "L-BFGS-B",
+                        'bounds' : [(0,1)] * self.new_colors.size}
+        )
+        
+        res = np.clip(res.x, 0.0, 1.0)
+        
+        return np.reshape(res, (-1, 3))
 
-
-# %%
